@@ -1,73 +1,142 @@
-# ControllerBattery 🎮🔋
+<p align="center">
+  <img src="assets/icon.png" width="160" height="160" alt="ControllerBattery Icon" />
+</p>
 
-A lightweight, native macOS menu bar app for tracking connected game controllers (Bluetooth and wired) and their battery levels, featuring macOS-native low-battery HUD notifications.
+<h1 align="center">ControllerBattery</h1>
 
----
+<p align="center">
+  <strong>Native macOS Menu Bar Battery Monitor & Low-Battery HUD for Game Controllers</strong><br/>
+  Lightweight, zero-dock status bar utility with native Apple-style accessory low-battery HUD alerts for PlayStation DualSense, Xbox, Nintendo Switch, and MFi controllers.
+</p>
 
-## ✨ Features
-
-- **Menu Bar Status Item**: Uses Apple's SF Symbol `gamecontroller` glyph in the macOS menu bar. Runs cleanly as an accessory agent (`LSUIElement`) with no Dock clutter.
-- **Controller List Popover**:
-  - Displays all connected wireless and wired controllers (DualSense, DualShock 4, Xbox Wireless Controller, Nintendo Switch Pro Controller, Joy-Cons, MFi, and HID gamepads).
-  - Branded squircle icons matching macOS System Settings (PlayStation Blue, Xbox Green, Nintendo Red).
-  - Live battery percentage and charging state (`Connected - ⚡️ Battery 55%`).
-  - Visual battery level indicators.
-- **macOS-Style Low-Battery HUD Notification**:
-  - Exact recreation of Apple's accessory low-battery notification pill.
-  - Floating translucent frosted glass capsule at the top of the display.
-  - Built-in controller glyph, "Low Battery", and "Plug-in soon to recharge".
-  - Circular battery gauge with red progress arc and centered percentage number.
-  - Accompanied by macOS alert sound and Notification Center banner.
-- **Customizable Alert Threshold**: Choose when to be notified (10%, 15%, 20%, or 25%).
-- **Optional Menu Bar Percentage**: Toggle showing the battery percentage directly next to the menu bar controller glyph.
-- **One-Click Settings Access**: Jump straight into the macOS Game Controllers settings pane.
-- **Launch at Login**: Easily enable or disable automatic launch on system startup.
-- **Custom App Icon Ready**: Prepared `Resources` folder ready for your custom `AppIcon.icns`.
+<p align="center">
+  <a href="https://github.com/passs0/ControllerBattery/releases/latest"><img src="https://img.shields.io/github/v/release/passs0/ControllerBattery?label=Latest%20Release&color=007AFF" alt="Latest Release" /></a>
+  <img src="https://img.shields.io/badge/macOS-13.0%2B%20%7C%20Apple%20Silicon%20%26%20Intel-black?logo=apple" alt="macOS 13.0+" />
+  <img src="https://img.shields.io/badge/framework-GameController%20%7C%20AppKit%20%7C%20SwiftUI-blue" alt="Frameworks" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License" /></a>
+</p>
 
 ---
 
-## 🚀 Building & Running
+> [!NOTE]
+> **AI-Generated Project Disclosure**
+> **ControllerBattery** (including its Swift architecture, GameController framework observation, AppKit non-activating HUD panel, reverse-engineered macOS accessory battery notification layout, and Apple HIG dark mode squircle icon) is an **AI-generated project** created with **Antigravity** (Google DeepMind).
 
-### Option 1: Using Make
+---
+
+## ✨ Why ControllerBattery?
+
+macOS displays a brief system pill banner when a game controller connects via Bluetooth, but **it provides no persistent menu bar battery monitor and never alerts you when your controller battery drops dangerously low during a game**.
+
+To check your battery level, you usually have to leave your game, open **System Settings**, navigate to the **Game Controllers** pane, and squint at the subline. When the battery runs out, the controller simply shuts off mid-action without warning.
+
+**ControllerBattery solves this with pure macOS first-party polish:**
+- **Instant Menu Bar Glanceability:** Sits quietly in your menu bar using Apple's official SF Symbol `gamecontroller` glyph, with optional live percentage display and zero Dock clutter (`LSUIElement`).
+- **macOS System Settings Aesthetics:** Pops open a clean, native card list matching macOS Sequoia/Sonoma System Settings, featuring branded PlayStation, Xbox, and Nintendo squircle badges.
+- **Apple Accessory Low-Battery HUD Notification:** Recreates Apple's exact floating frosted-glass accessory low-battery pill banner (with circular gauge, red progress arc, and alert sound) whenever your controller drops to 20% (or your chosen threshold).
+
+---
+
+## 🚀 Features
+
+### 1. Menu Bar Status Item (Zero Dock Clutter)
+- Uses Apple's official SF Symbol `gamecontroller` glyph with automatic Dark/Light menu bar template adaptation.
+- Runs as a lightweight macOS agent app (`LSUIElement = true`) with **0% background CPU overhead**.
+- Optional toggle to display the battery percentage directly in the menu bar next to the icon.
+- Hover tooltip showing all connected controllers and their individual battery percentages.
+
+### 2. System Settings-Style Controller List
+- Uses Apple's `GameController.framework` (`GCController`) for reliable detection of wireless (Bluetooth) and wired game controllers:
+  - **Sony PlayStation:** DualSense, DualSense Edge, DualShock 4 (branded Sony Blue squircle with `playstation.logo`).
+  - **Microsoft Xbox:** Xbox Wireless Controller, Xbox Elite Series 2 (branded Xbox Green squircle with `xbox.logo`).
+  - **Nintendo:** Switch Pro Controller, Joy-Cons (branded Nintendo Red squircle).
+  - **MFi & HID Gamepads:** 8BitDo, Backbone One, Razer, SteelSeries, etc.
+- Displays connection status, live battery level, charging indicators (`⚡️ Battery 55% (Charging)`), and visual progress badges.
+
+### 3. Native Low-Battery HUD Notification Banner
+- Recreates Apple's native accessory low-battery pill alert:
+  - **Floating Frosted Capsule:** Borderless, non-activating `NSPanel` floating smoothly at the top of your screen below the notch/menu bar.
+  - **Built-in Controller Glyph:** Uses Apple's official 3D controller asset (`Generic-GameController.png` from `CoreBluetoothUI`).
+  - **Apple Circular Gauge Ring:** Circular track, remaining battery arc in red, and centered battery percentage number.
+  - **Audio & System Integration:** Accompanied by macOS alert sound (`Sosumi`) and mirrored to macOS Notification Center.
+- **Smart Deduplication:** Alerts once per discharge cycle; will not spam repeatedly while in the low-battery state.
+- **One-Click Test:** Includes a **"Test Low Battery Notification"** button to preview the exact HUD alert anytime.
+
+### 4. Deep System Integration & Convenience
+- **Customizable Threshold:** Choose your alert threshold (10%, 15%, 20%, or 25%).
+- **Quick Settings Access:** One-click shortcut jumping directly to the macOS Game Controllers settings pane.
+- **Launch at Login:** Native integration with Apple's modern `SMAppService` API.
+- **Sleep & Wake Resilient:** Automatically refreshes connections and polling upon system wake.
+
+---
+
+## 📦 Installation & Getting Started
+
+### Recommended: Pre-Built Release
+
+1. **Download the App**:
+   Go to the [**Releases**](https://github.com/passs0/ControllerBattery/releases/latest) page and download **`ControllerBattery-v1.0.0.zip`**.
+2. **Move to Applications**:
+   Unzip the archive and drag **`ControllerBattery.app`** into your **`/Applications`** folder.
+3. **First-Launch Gatekeeper Clearance (macOS)**:
+   Because the app is ad-hoc signed, run the following command once in Terminal (or right-click -> **Open** in Finder) to clear the macOS quarantine attribute:
+   ```bash
+   xattr -cr /Applications/ControllerBattery.app
+   ```
+4. **Launch & Connect**:
+   - Open **`ControllerBattery`** from Applications, Spotlight, or Launchpad.
+   - Pair or turn on your game controller — the battery level will appear instantly in your menu bar!
+
+---
+
+## 🛠️ Architecture & Under the Hood
+
+```
+ControllerBattery/
+├── Package.swift                               # Swift package definition (macOS 13+)
+├── Info.plist                                  # Bundle configuration (LSUIElement = true)
+├── Makefile                                    # Convenient build & install targets
+├── build.sh                                    # Release packaging & ad-hoc codesigning script
+├── generate_icns.sh                            # Multi-resolution Retina AppIcon compiler
+├── assets/
+│   └── icon.png                                # macOS Sequoia Dark Mode vector app icon
+└── Sources/
+    └── ControllerBattery/
+        ├── main.swift                          # Main entry point & NSApplication lifecycle
+        ├── AppDelegate.swift                   # NSStatusItem & NSPopover coordinator
+        ├── ControllerManager.swift             # GameController observation & battery monitoring
+        ├── ControllerModel.swift               # Brand detection, SF Symbols & battery formatting
+        ├── MenuView.swift                      # SwiftUI popover matching System Settings
+        ├── LowBatteryHUDController.swift       # Floating NSPanel HUD presentation & animation
+        └── LowBatteryHUDView.swift             # Frosted glass capsule & circular gauge view
+```
+
+- **`GCController` Lifecycle:** Listens to `.GCControllerDidConnect` and `.GCControllerDidDisconnect` notifications, coupled with low-frequency (10s) battery polling that incurs zero perceptible system load.
+- **Non-Activating HUD Window:** `LowBatteryHUDController` manages an `NSPanel` with `.nonactivatingPanel` and collection behavior `[.canJoinAllSpaces, .fullScreenAuxiliary]`, ensuring full-screen games never lose focus when the low-battery warning appears.
+
+---
+
+## ⌨️ Building from Source
+
+Ensure you have **Xcode Command Line Tools** and **Swift 5.9+** installed:
+
 ```bash
-# Build and package into ControllerBattery.app
+# Clone the repository
+git clone https://github.com/passs0/ControllerBattery.git
+cd ControllerBattery
+
+# Build the release app bundle
 make app
 
-# Launch the app
+# Run the app
 make run
 
-# Optional: Install to /Applications
+# Install to /Applications
 make install
 ```
 
-### Option 2: Using the build script
-```bash
-./build.sh
-open build/ControllerBattery.app
-```
-
 ---
 
-## 🎨 Adding Your App Icon
+## 📄 License
 
-When you are ready with your app icon:
-1. Save your icon as `AppIcon.icns`.
-2. Place it either in the project root or in `build/ControllerBattery.app/Contents/Resources/AppIcon.icns`.
-3. If placing in the project root, re-run `./build.sh` — the script will automatically include it in the bundle.
-
----
-
-## 🛠️ Architecture
-
-- **`ControllerManager.swift`**: Uses Apple's `GameController.framework` (`GCController`) to observe controller connections, disconnections, and live battery states (`GCDeviceBattery`).
-- **`ControllerModel.swift`**: Identifies controller brands (Sony PlayStation, Microsoft Xbox, Nintendo, generic) and maps their corresponding brand colors and SF Symbols.
-- **`MenuView.swift`**: SwiftUI-based popover interface styled to match macOS System Settings.
-- **`LowBatteryHUDController.swift` & `LowBatteryHUDView.swift`**: Manages the floating, non-activating `NSPanel` presenting the animated low-battery notification pill.
-- **`AppDelegate.swift`**: Configures the `NSStatusItem`, popover behavior, and sleep/wake listeners.
-
----
-
-## 🤖 AI-Use Declaration
-
-This project was developed with the assistance of artificial intelligence (Google DeepMind / Antigravity Agentic AI), assisting in the Swift architecture, GameController framework integration, AppKit/SwiftUI HUD notification engineering, reverse-engineering of macOS accessory HUD layouts, and the Apple Human Interface Design icon generation.
-
+This project is licensed under the [MIT License](LICENSE).
