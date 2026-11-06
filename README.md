@@ -64,3 +64,10 @@ When you are ready with your app icon:
 - **`MenuView.swift`**: SwiftUI-based popover interface styled to match macOS System Settings.
 - **`LowBatteryHUDController.swift` & `LowBatteryHUDView.swift`**: Manages the floating, non-activating `NSPanel` presenting the animated low-battery notification pill.
 - **`AppDelegate.swift`**: Configures the `NSStatusItem`, popover behavior, and sleep/wake listeners.
+
+---
+
+## 🤖 AI-Use Declaration
+
+This project was developed with the assistance of artificial intelligence (Google DeepMind / Antigravity Agentic AI), assisting in the Swift architecture, GameController framework integration, AppKit/SwiftUI HUD notification engineering, reverse-engineering of macOS accessory HUD layouts, and the Apple Human Interface Design icon generation.
+
