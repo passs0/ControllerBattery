@@ -80,10 +80,10 @@ To check your battery level, you usually have to leave your game, open **System 
 
 ### Recommended: Pre-Built Release
 
-1. **Download the App**:
-   Go to the [**Releases**](https://github.com/passs0/ControllerBattery/releases/latest) page and download **`ControllerBattery-v1.0.0.zip`**.
-2. **Move to Applications**:
-   Unzip the archive and drag **`ControllerBattery.app`** into your **`/Applications`** folder.
+1. **Download the Disk Image**:
+   Go to the [**Releases**](https://github.com/passs0/ControllerBattery/releases/latest) page and download **`ControllerBattery-v1.0.0.dmg`**.
+2. **Drag to Applications**:
+   Open the downloaded `.dmg` and drag **`ControllerBattery.app`** directly into the **`Applications`** folder shortcut.
 3. **First-Launch Gatekeeper Clearance (macOS)**:
    Because the app is ad-hoc signed, run the following command once in Terminal (or right-click -> **Open** in Finder) to clear the macOS quarantine attribute:
    ```bash
