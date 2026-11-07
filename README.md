@@ -16,6 +16,12 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License" /></a>
 </p>
 
+<p align="center">
+  <img src="assets/menu_preview.png" width="360" alt="ControllerBattery Menu Bar Popover" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="assets/hud_preview.png" width="340" alt="macOS Low-Battery HUD Notification" />
+</p>
+
 ---
 
 > [!NOTE]
