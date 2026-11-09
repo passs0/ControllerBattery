@@ -2,20 +2,20 @@
 import PackageDescription
 
 let package = Package(
-    name: "ControllerBattery",
+    name: "LifeBar",
     platforms: [
         .macOS(.v13)
     ],
     products: [
         .executable(
-            name: "ControllerBattery",
-            targets: ["ControllerBattery"]
+            name: "LifeBar",
+            targets: ["LifeBar"]
         ),
     ],
     targets: [
         .executableTarget(
-            name: "ControllerBattery",
-            path: "Sources/ControllerBattery"
+            name: "LifeBar",
+            path: "Sources/LifeBar"
         ),
     ]
 )

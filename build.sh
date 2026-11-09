@@ -4,10 +4,10 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd "$DIR"
 
-echo "==> Building ControllerBattery (release)..."
+echo "==> Building LifeBar (release)..."
 swift build -c release
 
-APP_NAME="ControllerBattery.app"
+APP_NAME="LifeBar.app"
 APP_DIR="$DIR/build/$APP_NAME"
 CONTENTS_DIR="$APP_DIR/Contents"
 MACOS_DIR="$CONTENTS_DIR/MacOS"
@@ -18,8 +18,8 @@ rm -rf "$APP_DIR"
 mkdir -p "$MACOS_DIR"
 mkdir -p "$RESOURCES_DIR"
 
-cp "$DIR/.build/release/ControllerBattery" "$MACOS_DIR/ControllerBattery"
-chmod +x "$MACOS_DIR/ControllerBattery"
+cp "$DIR/.build/release/LifeBar" "$MACOS_DIR/LifeBar"
+chmod +x "$MACOS_DIR/LifeBar"
 cp "$DIR/Info.plist" "$CONTENTS_DIR/Info.plist"
 
 # If an AppIcon.icns exists in Resources or root, copy it

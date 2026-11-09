@@ -7,12 +7,12 @@ app:
 	@./build.sh
 
 run: app
-	@open build/ControllerBattery.app
+	@open build/LifeBar.app
 
 clean:
 	@rm -rf .build build
 
 install: app
 	@echo "Installing to /Applications..."
-	@cp -R build/ControllerBattery.app /Applications/
-	@echo "Installed ControllerBattery to /Applications"
+	@cp -R build/LifeBar.app /Applications/
+	@echo "Installed LifeBar to /Applications"

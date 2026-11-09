@@ -119,7 +119,7 @@ public struct MenuView: View {
                 MenuActionRow(
                     icon: "power",
                     iconColor: .secondary,
-                    title: "Quit ControllerBattery"
+                    title: "Quit LifeBar"
                 ) {
                     NSApplication.shared.terminate(nil)
                 } accessory: {
