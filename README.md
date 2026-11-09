@@ -70,7 +70,7 @@ To check your battery level, you usually have to leave your game, open **System 
 - **One-Click Test:** Includes a **"Test Low Battery Notification"** button to preview the exact HUD alert anytime.
 
 ### 4. Deep System Integration & Convenience
-- **Customizable Threshold:** Choose your alert threshold (10%, 15%, 20%, or 25%).
+- **Battery Health-Style Threshold Slider:** Smoothly adjust your preferred alert threshold using an Apple Battery Health-style slider (5% to 35% in 5% increments) with a live percentage indicator badge.
 - **Quick Settings Access:** One-click shortcut jumping directly to the macOS Game Controllers settings pane.
 - **Launch at Login:** Native integration with Apple's modern `SMAppService` API.
 - **Sleep & Wake Resilient:** Automatically refreshes connections and polling upon system wake.
