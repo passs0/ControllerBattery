@@ -100,9 +100,10 @@ public struct ControllerDevice: Identifiable, Equatable {
     }
 
     public var isLowBattery: Bool {
-        guard let level = batteryLevel else { return false }
-        // Low battery if level <= threshold (default 20%) and not charging
-        return level <= 0.20 && batteryState != .charging
+        guard let percent = batteryPercent else { return false }
+        let saved = UserDefaults.standard.integer(forKey: "lowBatteryThreshold")
+        let threshold = saved > 0 ? saved : 20
+        return percent <= threshold && batteryState != .charging
     }
 
     public var batterySymbolName: String {

@@ -10,6 +10,7 @@ public final class ControllerManager: ObservableObject {
     @Published public var lowBatteryThreshold: Int {
         didSet {
             UserDefaults.standard.set(lowBatteryThreshold, forKey: "lowBatteryThreshold")
+            refreshControllers()
         }
     }
     @Published public var showPercentageInMenuBar: Bool {

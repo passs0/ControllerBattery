@@ -4,8 +4,16 @@ import ServiceManagement
 public struct MenuView: View {
     @ObservedObject var manager = ControllerManager.shared
     @State private var launchAtLogin: Bool = (SMAppService.mainApp.status == .enabled)
+    @State private var isThresholdHovered: Bool = false
+    public var previewControllers: [ControllerDevice]? = nil
 
-    public init() {}
+    private var activeControllers: [ControllerDevice] {
+        previewControllers ?? manager.controllers
+    }
+
+    public init(previewControllers: [ControllerDevice]? = nil) {
+        self.previewControllers = previewControllers
+    }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -20,11 +28,11 @@ public struct MenuView: View {
 
             // Controllers List or Empty State
             VStack(spacing: 8) {
-                if manager.controllers.isEmpty {
+                if activeControllers.isEmpty {
                     emptyStateView
                         .padding(.vertical, 16)
                 } else {
-                    ForEach(manager.controllers) { controller in
+                    ForEach(activeControllers) { controller in
                         controllerCard(controller)
                     }
                     .padding(.vertical, 8)
@@ -54,32 +62,60 @@ public struct MenuView: View {
                     isOn: $manager.showPercentageInMenuBar
                 )
 
-                // Low Battery Alert Threshold Picker
-                HStack(spacing: 10) {
-                    Image(systemName: "battery.25percent")
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(.secondary)
-                        .frame(width: 20)
+                // Low Battery Alert Threshold Slider (Apple Battery Health style)
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "slider.horizontal.2")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundColor(.secondary)
+                            .frame(width: 20)
 
-                    Text("Alert Threshold")
-                        .font(.system(size: 12.5))
-                        .foregroundColor(.primary)
+                        Text("Alert Threshold")
+                            .font(.system(size: 12.5))
+                            .foregroundColor(.primary)
 
-                    Spacer()
+                        Spacer()
 
-                    Picker("", selection: $manager.lowBatteryThreshold) {
-                        Text("10%").tag(10)
-                        Text("15%").tag(15)
-                        Text("20%").tag(20)
-                        Text("25%").tag(25)
+                        Text("\(manager.lowBatteryThreshold)%")
+                            .font(.system(size: 11, weight: .semibold, design: .rounded))
+                            .foregroundColor(.primary)
+                            .padding(.horizontal, 7)
+                            .padding(.vertical, 2)
+                            .background(Color.primary.opacity(0.06))
+                            .clipShape(Capsule())
                     }
-                    .labelsHidden()
-                    .pickerStyle(.menu)
-                    .controlSize(.small)
-                    .frame(width: 76)
+
+                    HStack(spacing: 8) {
+                        Text("5%")
+                            .font(.system(size: 9.5, weight: .medium, design: .rounded))
+                            .foregroundColor(.secondary.opacity(0.6))
+
+                        Slider(
+                            value: Binding(
+                                get: { Double(manager.lowBatteryThreshold) },
+                                set: { manager.lowBatteryThreshold = Int($0) }
+                            ),
+                            in: 5...35,
+                            step: 5
+                        )
+                        .controlSize(.small)
+
+                        Text("35%")
+                            .font(.system(size: 9.5, weight: .medium, design: .rounded))
+                            .foregroundColor(.secondary.opacity(0.6))
+                    }
+                    .padding(.leading, 30)
+                    .padding(.trailing, 4)
                 }
                 .padding(.horizontal, 10)
-                .padding(.vertical, 4)
+                .padding(.vertical, 5)
+                .background(
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .fill(isThresholdHovered ? Color.primary.opacity(0.08) : Color.clear)
+                )
+                .onHover { hovering in
+                    isThresholdHovered = hovering
+                }
 
                 // Launch at Login Switch
                 MenuToggleRow(
@@ -151,7 +187,7 @@ public struct MenuView: View {
 
             Spacer()
 
-            if manager.controllers.isEmpty {
+            if activeControllers.isEmpty {
                 Text("No Devices")
                     .font(.system(size: 11, weight: .medium))
                     .foregroundColor(.secondary)
@@ -165,7 +201,7 @@ public struct MenuView: View {
                         .fill(Color.green)
                         .frame(width: 6, height: 6)
 
-                    Text("\(manager.controllers.count) Connected")
+                    Text("\(activeControllers.count) Connected")
                         .font(.system(size: 11, weight: .medium, design: .rounded))
                         .foregroundColor(.secondary)
                 }
