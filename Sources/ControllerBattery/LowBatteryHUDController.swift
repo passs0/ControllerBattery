@@ -21,21 +21,24 @@ public final class LowBatteryHUDController {
         // Cancel existing dismiss timer
         dismissWorkItem?.cancel()
 
-        // 1. Also post native UNUserNotification for system notification history
+        // 1. Post native UNUserNotification for system Notification Center history
         postSystemNotification(name: controllerName, percent: batteryPercent)
 
-        // 2. Play subtle macOS alert sound
+        // 2. Play macOS standard alert sound
         if let sound = NSSound(named: "Sosumi") ?? NSSound(named: "Basso") {
             sound.play()
         }
 
-        // 3. Create or reuse HUD panel
+        // 3. Create or reuse floating HUD panel
+        let pillWidth: CGFloat = 296
+        let pillHeight: CGFloat = 52
+
         let panel: NSPanel
         if let existing = hudPanel {
             panel = existing
         } else {
             panel = NSPanel(
-                contentRect: NSRect(x: 0, y: 0, width: 300, height: 60),
+                contentRect: NSRect(x: 0, y: 0, width: pillWidth, height: pillHeight),
                 styleMask: [.borderless, .nonactivatingPanel],
                 backing: .buffered,
                 defer: false
@@ -59,30 +62,28 @@ public final class LowBatteryHUDController {
         }
 
         let hostingView = NSHostingView(rootView: hudView)
-        hostingView.frame = NSRect(x: 0, y: 0, width: 300, height: 60)
+        hostingView.frame = NSRect(x: 0, y: 0, width: pillWidth, height: pillHeight)
         panel.contentView = hostingView
 
-        // Position panel at top center of main screen (just below notch/menu bar)
+        // Position panel at top center of main screen (directly below notch/menu bar)
         guard let screen = NSScreen.main else { return }
         let screenFrame = screen.frame
         let visibleFrame = screen.visibleFrame
 
-        let pillWidth: CGFloat = 300
-        let pillHeight: CGFloat = 60
+        // Top inset accommodates MacBook notch (macOS 12+) or standard menu bar
+        let topInset = max(screenFrame.maxY - visibleFrame.maxY, 28)
         let targetX = screenFrame.origin.x + (screenFrame.width - pillWidth) / 2.0
-        // Sits just below menu bar or camera housing
-        let targetY = visibleFrame.origin.y + visibleFrame.height - pillHeight - 8
-
-        let startY = screenFrame.origin.y + screenFrame.height + 10
+        let targetY = screenFrame.maxY - topInset - pillHeight - 8
+        let startY = screenFrame.origin.y + screenFrame.height + 15
 
         panel.setFrame(NSRect(x: targetX, y: startY, width: pillWidth, height: pillHeight), display: true)
         panel.alphaValue = 0.0
         panel.orderFrontRegardless()
 
-        // Spring entrance animation
+        // Apple fluid spring entrance animation
         NSAnimationContext.runAnimationGroup { context in
-            context.duration = 0.45
-            context.timingFunction = CAMediaTimingFunction(name: .easeOut)
+            context.duration = 0.48
+            context.timingFunction = CAMediaTimingFunction(controlPoints: 0.16, 1.0, 0.3, 1.0)
             panel.animator().setFrame(NSRect(x: targetX, y: targetY, width: pillWidth, height: pillHeight), display: true)
             panel.animator().alphaValue = 1.0
         }
@@ -109,7 +110,7 @@ public final class LowBatteryHUDController {
         let offscreenY = screenFrame.origin.y + screenFrame.height + 20
 
         NSAnimationContext.runAnimationGroup({ context in
-            context.duration = 0.35
+            context.duration = 0.32
             context.timingFunction = CAMediaTimingFunction(name: .easeIn)
             var frame = panel.frame
             frame.origin.y = offscreenY

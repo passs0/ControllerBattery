@@ -46,6 +46,35 @@ public enum ControllerBrand: String, CaseIterable, Identifiable {
             return Color(red: 0.35, green: 0.40, blue: 0.50)
         }
     }
+
+    public var brandGradient: LinearGradient {
+        switch self {
+        case .playStation:
+            return LinearGradient(
+                colors: [Color(red: 0.0, green: 0.47, blue: 0.92), Color(red: 0.0, green: 0.36, blue: 0.76)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        case .xbox:
+            return LinearGradient(
+                colors: [Color(red: 0.08, green: 0.58, blue: 0.16), Color(red: 0.04, green: 0.44, blue: 0.08)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        case .nintendo:
+            return LinearGradient(
+                colors: [Color(red: 0.94, green: 0.15, blue: 0.18), Color(red: 0.80, green: 0.08, blue: 0.10)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        case .generic:
+            return LinearGradient(
+                colors: [Color(red: 0.40, green: 0.45, blue: 0.56), Color(red: 0.28, green: 0.32, blue: 0.42)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        }
+    }
 }
 
 public struct ControllerDevice: Identifiable, Equatable {

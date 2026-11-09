@@ -52,8 +52,8 @@ public final class ControllerManager: ObservableObject {
             }
         }
 
-        // Periodic battery refresh timer (every 10 seconds)
-        pollTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { [weak self] _ in
+        // Periodic battery refresh timer (every 6 seconds for responsive status changes)
+        pollTimer = Timer.scheduledTimer(withTimeInterval: 6.0, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 self?.refreshControllers()
             }

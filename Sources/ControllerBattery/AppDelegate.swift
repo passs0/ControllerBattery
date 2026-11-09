@@ -3,7 +3,7 @@ import SwiftUI
 import Combine
 
 @MainActor
-public final class AppDelegate: NSObject, NSApplicationDelegate {
+public final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     private var statusItem: NSStatusItem!
     private var popover: NSPopover!
     private var eventMonitor: Any?
@@ -19,7 +19,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
         if let button = statusItem.button {
-            let symbolConfig = NSImage.SymbolConfiguration(pointSize: 15, weight: .regular)
+            let symbolConfig = NSImage.SymbolConfiguration(pointSize: 14.5, weight: .regular)
             let image = NSImage(systemSymbolName: "gamecontroller", accessibilityDescription: "Game Controllers")?
                 .withSymbolConfiguration(symbolConfig)
             image?.isTemplate = true
@@ -33,9 +33,13 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func setupPopover() {
         popover = NSPopover()
-        popover.contentSize = NSSize(width: 320, height: 380)
         popover.behavior = .transient
-        popover.contentViewController = NSHostingController(rootView: MenuView())
+        popover.animates = true
+        popover.delegate = self
+
+        let host = NSHostingController(rootView: MenuView())
+        popover.contentViewController = host
+        popover.contentSize = host.view.fittingSize
     }
 
     private func setupBindings() {
@@ -98,12 +102,29 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     private func showPopover() {
         guard let button = statusItem.button else { return }
         ControllerManager.shared.refreshControllers()
+
+        if let host = popover.contentViewController as? NSHostingController<MenuView> {
+            popover.contentSize = host.view.fittingSize
+        }
+
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        button.highlight(true)
         popover.contentViewController?.view.window?.makeKey()
     }
 
     private func closePopover() {
         popover.performClose(nil)
+        statusItem.button?.highlight(false)
+    }
+
+    // MARK: - NSPopoverDelegate (Apple native status item highlight)
+
+    public func popoverWillShow(_ notification: Notification) {
+        statusItem.button?.highlight(true)
+    }
+
+    public func popoverDidClose(_ notification: Notification) {
+        statusItem.button?.highlight(false)
     }
 
     deinit {
