@@ -4,9 +4,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$SCRIPT_DIR"
 
-APP_NAME="ControllerBattery"
-VERSION="1.0.0"
-DMG_NAME="ControllerBattery-v${VERSION}.dmg"
+APP_NAME="LifeBar"
+VERSION="1.1.0"
+DMG_NAME="LifeBar-v${VERSION}.dmg"
 STAGING_DIR="/tmp/cb_dmg_staging"
 RW_DMG="/tmp/cb_rw.dmg"
 
