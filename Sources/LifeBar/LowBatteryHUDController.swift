@@ -48,7 +48,7 @@ public final class LowBatteryHUDController {
             panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
             panel.backgroundColor = .clear
             panel.isOpaque = false
-            panel.hasShadow = false
+            panel.hasShadow = true
             panel.ignoresMouseEvents = false
             self.hudPanel = panel
         }
@@ -63,7 +63,11 @@ public final class LowBatteryHUDController {
 
         let hostingView = NSHostingView(rootView: hudView)
         hostingView.frame = NSRect(x: 0, y: 0, width: pillWidth, height: pillHeight)
+        hostingView.wantsLayer = true
+        hostingView.layer?.cornerRadius = pillHeight / 2.0
+        hostingView.layer?.masksToBounds = true
         panel.contentView = hostingView
+        panel.invalidateShadow()
 
         // Position panel at top center of main screen (directly below notch/menu bar)
         guard let screen = NSScreen.main else { return }

@@ -22,10 +22,10 @@ public struct LowBatteryHUDView: View {
 
     public var body: some View {
         HStack(spacing: 12) {
-            // Left Device Glyph (Image 3: Apple built-in 3D gamepad)
+            // Left Device Glyph (Apple built-in 3D gamepad)
             leadingIconView
 
-            // Middle Description (Image 1: Apple accessory low-battery typography)
+            // Middle Description (Apple accessory low-battery typography)
             VStack(alignment: .leading, spacing: 1.5) {
                 Text("Low Battery")
                     .font(.system(size: 13, weight: .semibold, design: .default))
@@ -38,7 +38,7 @@ public struct LowBatteryHUDView: View {
 
             Spacer(minLength: 10)
 
-            // Right Circular Battery Gauge (Image 1: Circular gauge with red arc & rounded number)
+            // Right Circular Battery Gauge (Circular gauge with red arc & rounded number)
             circularGaugeView
         }
         .padding(.leading, 14)
@@ -47,17 +47,15 @@ public struct LowBatteryHUDView: View {
         .frame(width: 296, height: 52)
         .background(
             ZStack {
-                // Frosted translucent HUD glass capsule
-                VisualEffectBlur(material: .hudWindow, blendingMode: .withinWindow)
-                    .clipShape(Capsule())
+                // Frosted translucent HUD glass capsule with explicit CALayer corner clipping
+                VisualEffectBlur(material: .hudWindow, blendingMode: .withinWindow, cornerRadius: 26)
 
                 // Delicate Apple specular inner rim
                 Capsule()
                     .strokeBorder(Color.white.opacity(0.18), lineWidth: 0.5)
             }
         )
-        // Soft diffuse ambient shadow
-        .shadow(color: Color.black.opacity(0.30), radius: 18, x: 0, y: 8)
+        .clipShape(Capsule())
         .contentShape(Capsule())
         .onTapGesture {
             onDismiss?()
@@ -112,21 +110,28 @@ public struct LowBatteryHUDView: View {
     }
 }
 
-// NSVisualEffectView wrapper for SwiftUI on macOS
+// NSVisualEffectView wrapper with hardware CALayer corner radius & masking
 struct VisualEffectBlur: NSViewRepresentable {
     var material: NSVisualEffectView.Material
     var blendingMode: NSVisualEffectView.BlendingMode
+    var cornerRadius: CGFloat
 
     func makeNSView(context: Context) -> NSVisualEffectView {
         let view = NSVisualEffectView()
         view.material = material
         view.blendingMode = blendingMode
         view.state = .active
+        view.wantsLayer = true
+        view.layer?.cornerRadius = cornerRadius
+        view.layer?.masksToBounds = true
         return view
     }
 
     func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
         nsView.material = material
         nsView.blendingMode = blendingMode
+        nsView.wantsLayer = true
+        nsView.layer?.cornerRadius = cornerRadius
+        nsView.layer?.masksToBounds = true
     }
 }
