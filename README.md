@@ -17,7 +17,9 @@
 </p>
 
 <p align="center">
-  <img src="assets/preview.png" width="800" alt="LifeBar Interface Preview" />
+  <img src="assets/hud.png" width="340" alt="LifeBar Low-Battery HUD Notification" />
+  <br/><br/>
+  <img src="assets/popover.png" width="340" alt="LifeBar Menu Bar Popover" />
 </p>
 
 ---
