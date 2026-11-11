@@ -28,6 +28,17 @@ if [ -f "$DIR/AppIcon.icns" ]; then
     cp "$DIR/AppIcon.icns" "$RESOURCES_DIR/AppIcon.icns"
 fi
 
+if [ -d "$DIR/assets/LifeBar.icon.xcassets" ] && xcrun actool --version >/dev/null 2>&1; then
+    echo "==> Compiling dynamic Assets.car..."
+    xcrun actool "$DIR/assets/LifeBar.icon.xcassets" \
+        --compile "$RESOURCES_DIR" \
+        --platform macosx \
+        --minimum-deployment-target 13.0 \
+        --app-icon LifeBar \
+        --output-partial-info-plist /tmp/lifebar_partial.plist \
+        --output-format human-readable-text || true
+fi
+
 echo "==> Ad-hoc code signing..."
 codesign --force --deep --sign - "$APP_DIR"
 

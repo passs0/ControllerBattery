@@ -37,25 +37,15 @@
           "fill" : {
             "solid" : "extended-srgb:0.20392,0.78039,0.34902,1.00000"
           },
-          "image-name" : "3.3 – layer.svg",
-          "name" : "3.3 – layer"
+          "image-name" : "3.2 – layer.svg",
+          "name" : "3.2 – layer"
         },
         {
-          "fill-specializations" : [
-            {
-              "value" : {
-                "solid" : "extended-gray:0.75000,1.00000"
-              }
-            },
-            {
-              "appearance" : "tinted",
-              "value" : {
-                "solid" : "extended-gray:0.25000,1.00000"
-              }
-            }
-          ],
-          "image-name" : "2.2 – layer.svg",
-          "name" : "2.2 – layer"
+          "fill" : {
+            "solid" : "extended-gray:0.50000,1.00000"
+          },
+          "image-name" : "2.1 – layer.svg",
+          "name" : "2.1 – layer"
         }
       ],
       "shadow" : {

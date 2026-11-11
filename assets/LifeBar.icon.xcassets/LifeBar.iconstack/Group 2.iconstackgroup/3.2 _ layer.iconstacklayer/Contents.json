@@ -38,7 +38,7 @@
         "value" : {
           "color" : {
             "matching-style" : "fully-qualified-name",
-            "name" : "LifeBar_Assets\/Color-7",
+            "name" : "LifeBar_Assets\/Color-6",
             "type" : "color-set"
           },
           "type" : "solid"
@@ -51,7 +51,7 @@
         "value" : {
           "color" : {
             "matching-style" : "fully-qualified-name",
-            "name" : "LifeBar_Assets\/Color-7",
+            "name" : "LifeBar_Assets\/Color-6",
             "type" : "color-set"
           },
           "type" : "solid"
@@ -64,7 +64,7 @@
         "value" : {
           "color" : {
             "matching-style" : "fully-qualified-name",
-            "name" : "LifeBar_Assets\/Color-7",
+            "name" : "LifeBar_Assets\/Color-6",
             "type" : "color-set"
           },
           "type" : "solid"
@@ -77,7 +77,7 @@
         "value" : {
           "color" : {
             "matching-style" : "fully-qualified-name",
-            "name" : "LifeBar_Assets\/Color-8",
+            "name" : "LifeBar_Assets\/Color-6",
             "type" : "color-set"
           },
           "type" : "solid"
@@ -269,7 +269,7 @@
         "icon-studio-localization" : "unspecified",
         "value" : {
           "matching-style" : "fully-qualified-name",
-          "name" : "LifeBar_Assets\/2.2 _ layer",
+          "name" : "LifeBar_Assets\/3.2 _ layer",
           "type" : "image-set"
         }
       },
@@ -279,7 +279,7 @@
         "icon-studio-localization" : "unspecified",
         "value" : {
           "matching-style" : "fully-qualified-name",
-          "name" : "LifeBar_Assets\/2.2 _ layer",
+          "name" : "LifeBar_Assets\/3.2 _ layer",
           "type" : "image-set"
         }
       },
@@ -289,7 +289,7 @@
         "icon-studio-localization" : "unspecified",
         "value" : {
           "matching-style" : "fully-qualified-name",
-          "name" : "LifeBar_Assets\/2.2 _ layer",
+          "name" : "LifeBar_Assets\/3.2 _ layer",
           "type" : "image-set"
         }
       },
@@ -299,7 +299,7 @@
         "icon-studio-localization" : "unspecified",
         "value" : {
           "matching-style" : "fully-qualified-name",
-          "name" : "LifeBar_Assets\/2.2 _ layer",
+          "name" : "LifeBar_Assets\/3.2 _ layer",
           "type" : "image-set"
         }
       }
