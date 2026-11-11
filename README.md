@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/icon.png" width="160" height="160" alt="LifeBar Icon" />
+  <img src="assets/icon_mac.png" width="160" height="160" alt="LifeBar Icon" />
 </p>
 
 <h1 align="center">LifeBar</h1>
@@ -82,9 +82,9 @@ To check your battery level, you usually have to leave your game, open **System 
 ### Recommended: Pre-Built Release
 
 1. **Download the App**:
-   Go to the [**Releases**](https://github.com/passs0/LifeBar/releases/latest) page and download **`LifeBar-v1.1.0.zip`**.
+   Go to the [**Releases**](https://github.com/passs0/LifeBar/releases/latest) page and download **`LifeBar-v1.1.0.dmg`** (or `LifeBar-v1.1.0.zip`).
 2. **Move to Applications**:
-   Unzip the archive and drag **`LifeBar.app`** into your **`/Applications`** folder.
+   Open the disk image and drag **`LifeBar.app`** directly into your **`/Applications`** folder.
 3. **First-Launch Gatekeeper Clearance (macOS)**:
    Because the app is ad-hoc signed, run the following command once in Terminal (or right-click -> **Open** in Finder) to clear the macOS quarantine attribute:
    ```bash
