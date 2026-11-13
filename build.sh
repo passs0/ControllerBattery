@@ -20,6 +20,7 @@ mkdir -p "$RESOURCES_DIR"
 
 cp "$DIR/.build/release/LifeBar" "$MACOS_DIR/LifeBar"
 chmod +x "$MACOS_DIR/LifeBar"
+strip -rSTx "$MACOS_DIR/LifeBar"
 cp "$DIR/Info.plist" "$CONTENTS_DIR/Info.plist"
 
 if [ -d "$DIR/assets/LifeBar.icon.xcassets" ]; then
