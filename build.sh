@@ -22,12 +22,6 @@ cp "$DIR/.build/release/LifeBar" "$MACOS_DIR/LifeBar"
 chmod +x "$MACOS_DIR/LifeBar"
 cp "$DIR/Info.plist" "$CONTENTS_DIR/Info.plist"
 
-# If an AppIcon.icns exists in Resources or root, copy it
-if [ -f "$DIR/AppIcon.icns" ]; then
-    echo "==> Found AppIcon.icns, adding to bundle..."
-    cp "$DIR/AppIcon.icns" "$RESOURCES_DIR/AppIcon.icns"
-fi
-
 if [ -d "$DIR/assets/LifeBar.icon.xcassets" ]; then
     if xcrun --find actool >/dev/null 2>&1; then
         echo "==> Compiling the Light, Dark, Clear, and Tinted app icon variants..."
@@ -56,6 +50,12 @@ PY
     else
         echo "Warning: actool is unavailable; using the legacy static icon for this local build." >&2
     fi
+fi
+
+# Prefer actool's compact ICNS fallback while keeping all four appearances in
+# Assets.car. Copy the larger static icon only when this machine lacks actool.
+if [ ! -f "$RESOURCES_DIR/LifeBar.icns" ] && [ -f "$DIR/AppIcon.icns" ]; then
+    cp "$DIR/AppIcon.icns" "$RESOURCES_DIR/AppIcon.icns"
 fi
 
 echo "==> Ad-hoc code signing..."
