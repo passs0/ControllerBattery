@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$SCRIPT_DIR"
 
 APP_NAME="LifeBar"
-VERSION="1.1.0"
+VERSION="${VERSION:-1.1.1}"
 DMG_NAME="LifeBar-v${VERSION}.dmg"
 STAGING_DIR="/tmp/cb_dmg_staging"
 RW_DMG="/tmp/cb_rw.dmg"

@@ -61,7 +61,7 @@ jobs:
       - name: Package DMG Disk Image
         run: |
           export CI=true
-          ./scripts/package_dmg.sh
+          VERSION="${{ steps.get_version.outputs.version }}" ./scripts/package_dmg.sh
 
       - name: Upload DMG Artifact
         uses: actions/upload-artifact@v4
