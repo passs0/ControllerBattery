@@ -61,6 +61,7 @@ fi
 
 echo "==> Ad-hoc code signing..."
 codesign --force --deep --sign - "$APP_DIR"
+codesign --verify --deep --strict "$APP_DIR"
 
 echo "==> Successfully created $APP_DIR"
 echo "==> To run: open \"$APP_DIR\""

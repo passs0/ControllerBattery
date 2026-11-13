@@ -11,15 +11,10 @@
 
 <p align="center">
   <a href="https://github.com/passs0/LifeBar/releases/latest"><img src="https://img.shields.io/github/v/release/passs0/LifeBar?label=Latest%20Release&color=007AFF" alt="Latest Release" /></a>
+  <img src="https://img.shields.io/badge/version-1.1.1-blue" alt="Version 1.1.1" />
   <img src="https://img.shields.io/badge/macOS-13.0%2B%20%7C%20Apple%20Silicon%20%26%20Intel-black?logo=apple" alt="macOS 13.0+" />
   <img src="https://img.shields.io/badge/framework-GameController%20%7C%20AppKit%20%7C%20SwiftUI-blue" alt="Frameworks" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License" /></a>
-</p>
-
-<p align="center">
-  <img src="assets/hud.png" width="340" alt="LifeBar Low-Battery HUD Notification" />
-  <br/><br/>
-  <img src="assets/popover.png" width="340" alt="LifeBar Menu Bar Popover" />
 </p>
 
 ---
@@ -32,14 +27,14 @@
 
 ## ✨ Why LifeBar?
 
-macOS displays a brief system pill banner when a game controller connects via Bluetooth, but **it provides no persistent menu bar battery monitor and never alerts you when your controller battery drops dangerously low during a game**.
+macOS displays a brief system banner when a game controller connects via Bluetooth, but **it provides no persistent menu bar battery monitor and does not alert you when a controller battery drops low during a game**.
 
 To check your battery level, you usually have to leave your game, open **System Settings**, navigate to the **Game Controllers** pane, and squint at the subline. When the battery runs out, the controller simply shuts off mid-action without warning—costing you a boss fight or clutch multiplayer round.
 
-**LifeBar solves this with pure macOS first-party polish:**
+**LifeBar fills that gap with a focused menu bar utility:**
 - **Instant Menu Bar Glanceability:** Sits quietly in your menu bar using Apple's official SF Symbol `gamecontroller` glyph, with optional live percentage display and zero Dock clutter (`LSUIElement`).
-- **macOS System Settings Aesthetics:** Pops open a clean, native card list matching macOS Sequoia/Sonoma System Settings, featuring branded PlayStation, Xbox, and Nintendo squircle badges.
-- **Apple Accessory Low-Battery HUD Notification:** Recreates Apple's exact floating frosted-glass accessory low-battery pill banner (with circular gauge, red progress arc, and alert sound) whenever your controller drops to 20% (or your chosen threshold).
+- **Compact Controller List:** Shows connected devices, charging state, and battery level in a simple system-style list.
+- **Low-Battery Alert:** Shows a compact custom alert and can mirror it to Notification Center when a controller crosses your chosen threshold.
 
 ---
 
@@ -48,20 +43,20 @@ To check your battery level, you usually have to leave your game, open **System 
 ### 1. Menu Bar Status Item (Zero Dock Clutter)
 - Uses Apple's official SF Symbol `gamecontroller` glyph with automatic Dark/Light menu bar template adaptation.
 - Highlights with macOS's native accent selection pill while the menu is open (`NSPopoverDelegate`).
-- Runs as a lightweight macOS agent app (`LSUIElement = true`) with **0% background CPU overhead**.
+- Runs as a lightweight macOS agent app (`LSUIElement = true`) with low-frequency controller polling.
 - Optional toggle to display the battery percentage directly in the menu bar next to the icon.
 - Hover tooltip showing all connected controllers and their individual battery percentages.
 
-### 2. System Settings-Style Controller List
+### 2. Compact Controller List
 - Uses Apple's `GameController.framework` (`GCController`) for reliable detection of wireless (Bluetooth) and wired game controllers:
-  - **Sony PlayStation:** DualSense, DualSense Edge, DualShock 4 (branded Sony Blue squircle with `playstation.logo`).
-  - **Microsoft Xbox:** Xbox Wireless Controller, Xbox Elite Series 2 (branded Xbox Green squircle with `xbox.logo`).
-  - **Nintendo:** Switch Pro Controller, Joy-Cons (branded Nintendo Red squircle).
-  - **MFi & HID Gamepads:** 8BitDo, Backbone One, Razer, SteelSeries, etc.
-- Displays connection status, live battery level, charging indicators (`⚡️ Battery 55% (Charging)`), and visual progress badges.
+  - **Sony PlayStation:** DualSense, DualSense Edge, DualShock 4.
+  - **Microsoft Xbox:** Xbox Wireless Controller, Xbox Elite Series 2.
+  - **Nintendo:** Switch Pro Controller and Joy-Cons.
+  - **MFi & HID Gamepads:** 8BitDo, Backbone One, Razer, SteelSeries, and others.
+- Displays connection status, live battery level, and charging state with concise text and symbols.
 
-### 3. Native Low-Battery HUD Notification Banner
-- Recreates Apple's native accessory low-battery pill alert:
+### 3. Low-Battery HUD Alert
+- Shows a compact custom alert when a controller falls below the selected threshold:
   - **Floating Frosted Capsule:** Borderless, non-activating `NSPanel` floating smoothly at the top of your screen below the notch/menu bar.
   - **Built-in Controller Glyph:** Uses Apple's official 3D controller asset (`Generic-GameController.png` from `CoreBluetoothUI`).
   - **Apple Circular Gauge Ring:** Circular track, remaining battery arc in red, and centered battery percentage number in SF Pro Rounded.
@@ -70,7 +65,7 @@ To check your battery level, you usually have to leave your game, open **System 
 - **One-Click Test:** Includes a **"Test Low Battery Notification"** button to preview the exact HUD alert anytime.
 
 ### 4. Deep System Integration & Convenience
-- **Battery Health-Style Threshold Slider:** Smoothly adjust your preferred alert threshold using an Apple Battery Health-style slider (5% to 35% in 5% increments) with a live percentage indicator badge.
+- **Alert Threshold:** Set a low-battery threshold from 5% to 35% in 5% increments, with the selected value shown alongside the system slider.
 - **Quick Settings Access:** One-click shortcut jumping directly to the macOS Game Controllers settings pane.
 - **Launch at Login:** Native integration with Apple's modern `SMAppService` API.
 - **Sleep & Wake Resilient:** Automatically refreshes connections and polling upon system wake.
@@ -82,7 +77,7 @@ To check your battery level, you usually have to leave your game, open **System 
 ### Recommended: Pre-Built Release
 
 1. **Download the App**:
-   Go to the [**Releases**](https://github.com/passs0/LifeBar/releases/latest) page and download **`LifeBar-v1.1.0.dmg`** (or `LifeBar-v1.1.0.zip`).
+   Go to the [**Releases**](https://github.com/passs0/LifeBar/releases/latest) page and download **`LifeBar-v1.1.1.dmg`**.
 2. **Move to Applications**:
    Open the disk image and drag **`LifeBar.app`** directly into your **`/Applications`** folder.
 3. **First-Launch Gatekeeper Clearance (macOS)**:
@@ -125,7 +120,7 @@ LifeBar/
 
 ## ⌨️ Building from Source
 
-Ensure you have **Xcode Command Line Tools** and **Swift 5.9+** installed:
+Ensure you have **Xcode Command Line Tools** and **Swift 5.9+** installed. Xcode 26 or later is needed to compile the four-appearance icon catalog; without `actool`, a local build uses the static fallback icon.
 
 ```bash
 # Clone the repository
@@ -147,3 +142,5 @@ make install
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
+
+See [release notes](RELEASE_NOTES.md) and the [roadmap](ROADMAP.md).
