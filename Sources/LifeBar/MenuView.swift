@@ -4,7 +4,7 @@ import ServiceManagement
 public struct MenuView: View {
     @ObservedObject var manager = ControllerManager.shared
     @State private var launchAtLogin: Bool = (SMAppService.mainApp.status == .enabled)
-    @State private var isThresholdHovered: Bool = false
+    @State private var isSettingsExpanded = false
     public var previewControllers: [ControllerDevice]? = nil
 
     private var activeControllers: [ControllerDevice] {
@@ -27,125 +27,117 @@ public struct MenuView: View {
                 .opacity(0.4)
 
             // Controllers List or Empty State
-            VStack(spacing: 8) {
-                if activeControllers.isEmpty {
-                    emptyStateView
-                        .padding(.vertical, 16)
-                } else {
-                    ForEach(activeControllers) { controller in
-                        controllerCard(controller)
+            ScrollView(showsIndicators: activeControllers.count > 3) {
+                VStack(spacing: 8) {
+                    if activeControllers.isEmpty {
+                        emptyStateView
+                            .padding(.vertical, 16)
+                    } else {
+                        ForEach(activeControllers) { controller in
+                            controllerCard(controller)
+                        }
+                        .padding(.vertical, 8)
                     }
-                    .padding(.vertical, 8)
                 }
             }
+            .frame(maxHeight: 220)
             .padding(.horizontal, 12)
 
             Divider()
                 .opacity(0.4)
 
-            // Quick Actions & Controls (Apple Control Center style)
-            VStack(alignment: .leading, spacing: 2) {
-                // Test Low Battery Alert
-                MenuActionRow(
-                    icon: "bell.badge.fill",
-                    iconColor: .orange,
-                    title: "Test Low Battery Notification"
-                ) {
-                    manager.triggerTestAlert()
-                }
-
-                // Show Percentage in Menu Bar
-                MenuToggleRow(
-                    icon: "percent",
-                    iconColor: .secondary,
-                    title: "Show Percentage in Menu Bar",
-                    isOn: $manager.showPercentageInMenuBar
-                )
-
-                // Low Battery Alert Threshold Slider (Apple Battery Health style)
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack(spacing: 10) {
-                        Image(systemName: "slider.horizontal.2")
-                            .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(.secondary)
-                            .frame(width: 20)
-
-                        Text("Alert Threshold")
-                            .font(.system(size: 12.5))
-                            .foregroundColor(.primary)
-
-                        Spacer()
-
-                        Text("\(manager.lowBatteryThreshold)%")
-                            .font(.system(size: 11, weight: .semibold, design: .rounded))
-                            .foregroundColor(.primary)
-                            .padding(.horizontal, 7)
-                            .padding(.vertical, 2)
-                            .background(Color.primary.opacity(0.06))
-                            .clipShape(Capsule())
+            DisclosureGroup("Settings", isExpanded: $isSettingsExpanded) {
+                VStack(alignment: .leading, spacing: 2) {
+                    // Test Low Battery Alert
+                    MenuActionRow(
+                        icon: "bell.badge",
+                        iconColor: .secondary,
+                        title: "Test Low Battery Alert"
+                    ) {
+                        manager.triggerTestAlert()
                     }
 
-                    HStack(spacing: 8) {
-                        Text("5%")
-                            .font(.system(size: 9.5, weight: .medium, design: .rounded))
-                            .foregroundColor(.secondary.opacity(0.6))
-
-                        Slider(
-                            value: Binding(
-                                get: { Double(manager.lowBatteryThreshold) },
-                                set: { manager.lowBatteryThreshold = Int($0) }
-                            ),
-                            in: 5...35,
-                            step: 5
-                        )
-                        .controlSize(.small)
-
-                        Text("35%")
-                            .font(.system(size: 9.5, weight: .medium, design: .rounded))
-                            .foregroundColor(.secondary.opacity(0.6))
-                    }
-                    .padding(.leading, 30)
-                    .padding(.trailing, 4)
-                }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(
-                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .fill(isThresholdHovered ? Color.primary.opacity(0.08) : Color.clear)
-                )
-                .onHover { hovering in
-                    isThresholdHovered = hovering
-                }
-
-                // Launch at Login Switch
-                MenuToggleRow(
-                    icon: "arrow.clockwise",
-                    iconColor: .secondary,
-                    title: "Launch at Login",
-                    isOn: Binding(
-                        get: { launchAtLogin },
-                        set: { newValue in
-                            launchAtLogin = newValue
-                            setLaunchAtLogin(enabled: newValue)
-                        }
+                    // Show Percentage in Menu Bar
+                    MenuToggleRow(
+                        icon: "percent",
+                        iconColor: .secondary,
+                        title: "Show Battery Percentage",
+                        isOn: $manager.showPercentageInMenuBar
                     )
-                )
 
-                // Open System Settings Game Controller Pane
-                MenuActionRow(
-                    icon: "gearshape",
-                    iconColor: .secondary,
-                    title: "Game Controller Settings…"
-                ) {
-                    openGameControllerSettings()
-                } accessory: {
-                    Image(systemName: "arrow.up.right")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(.secondary)
+                    // Low Battery Alert Threshold Slider
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "slider.horizontal.3")
+                                .foregroundColor(.secondary)
+                                .frame(width: 20)
+
+                            Text("Low Battery Alert")
+                                .font(.body)
+                                .foregroundColor(.primary)
+
+                            Spacer()
+
+                            Text("\(manager.lowBatteryThreshold)%")
+                                .font(.callout.monospacedDigit())
+                                .foregroundColor(.secondary)
+                        }
+
+                        HStack(spacing: 8) {
+                            Text("5%")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+
+                            Slider(
+                                value: Binding(
+                                    get: { Double(manager.lowBatteryThreshold) },
+                                    set: { manager.lowBatteryThreshold = Int($0) }
+                                ),
+                                in: 5...35,
+                                step: 5
+                            )
+                            .controlSize(.small)
+                            .accessibilityLabel("Low battery alert threshold")
+                            .accessibilityValue(Text("\(manager.lowBatteryThreshold) percent"))
+
+                            Text("35%")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.leading, 30)
+                        .padding(.trailing, 4)
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+
+                    // Launch at Login Switch
+                    MenuToggleRow(
+                        icon: "person.crop.circle.badge.checkmark",
+                        iconColor: .secondary,
+                        title: "Open at Login",
+                        isOn: Binding(
+                            get: { launchAtLogin },
+                            set: { newValue in
+                                launchAtLogin = newValue
+                                setLaunchAtLogin(enabled: newValue)
+                            }
+                        )
+                    )
+
+                    // Open System Settings Game Controller Pane
+                    MenuActionRow(
+                        icon: "gearshape",
+                        iconColor: .secondary,
+                        title: "Game Controller Settings…"
+                    ) {
+                        openGameControllerSettings()
+                    }
                 }
+                .padding(.top, 6)
             }
-            .padding(.horizontal, 6)
-            .padding(.vertical, 6)
+            .font(.body)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
 
             Divider()
                 .opacity(0.4)
@@ -182,14 +174,14 @@ public struct MenuView: View {
                 .foregroundColor(.secondary)
 
             Text("Game Controllers")
-                .font(.system(size: 13, weight: .semibold))
+                .font(.headline)
                 .foregroundColor(.primary)
 
             Spacer()
 
             if activeControllers.isEmpty {
                 Text("No Devices")
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.caption)
                     .foregroundColor(.secondary)
                     .padding(.horizontal, 7)
                     .padding(.vertical, 2)
@@ -202,7 +194,7 @@ public struct MenuView: View {
                         .frame(width: 6, height: 6)
 
                     Text("\(activeControllers.count) Connected")
-                        .font(.system(size: 11, weight: .medium, design: .rounded))
+                        .font(.caption)
                         .foregroundColor(.secondary)
                 }
                 .padding(.horizontal, 8)
@@ -213,87 +205,46 @@ public struct MenuView: View {
         }
     }
 
-    // MARK: - Controller Card (Matches Image 2 & System Settings)
+    // MARK: - Controller Row
     private func controllerCard(_ controller: ControllerDevice) -> some View {
-        HStack(spacing: 12) {
-            // Squircle Brand Icon (Matches macOS Settings Image 2)
-            ZStack {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(controller.brand.brandGradient)
-                    .frame(width: 36, height: 36)
-                    .shadow(color: controller.brand.brandColor.opacity(0.30), radius: 3, y: 1.5)
+        HStack(spacing: 10) {
+            Image(systemName: controller.brand.iconName)
+                .font(.title3)
+                .foregroundStyle(.secondary)
+                .frame(width: 24)
 
-                Image(systemName: controller.brand.iconName)
-                    .font(.system(size: 17, weight: .medium))
-                    .foregroundColor(.white)
-            }
-
-            // Info Details
-            VStack(alignment: .leading, spacing: 2.5) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(controller.name)
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.body)
                     .foregroundColor(.primary)
                     .lineLimit(1)
 
                 HStack(spacing: 5) {
-                    Text("Connected -")
-                        .font(.system(size: 11))
-                        .foregroundColor(.secondary)
-
                     Image(systemName: controller.batterySymbolName)
-                        .font(.system(size: 11.5))
                         .symbolRenderingMode(.hierarchical)
-                        .foregroundColor(
+                        .foregroundStyle(
                             controller.isLowBattery ? .red :
                             (controller.isCharging ? .green : .secondary)
                         )
 
-                    if let percent = controller.batteryPercent {
-                        Text(controller.isCharging ? "Battery \(percent)% (Charging)" : "Battery \(percent)%")
-                            .font(.system(size: 11))
-                            .foregroundColor(.secondary)
-                    }
+                    Text(controller.isCharging ? "Charging" : "Connected")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             }
 
             Spacer()
 
-            // Mini Battery Gauge (Apple Battery Widget Circular Arc)
             if let percent = controller.batteryPercent {
-                let fraction = CGFloat(max(0.01, min(1.0, Double(percent) / 100.0)))
-
-                ZStack {
-                    Circle()
-                        .stroke(Color.primary.opacity(0.12), lineWidth: 2.2)
-                        .frame(width: 24, height: 24)
-
-                    Circle()
-                        .trim(from: 0, to: fraction)
-                        .stroke(
-                            controller.isLowBattery ? Color.red :
-                            (controller.isCharging ? Color.green : Color.primary.opacity(0.7)),
-                            style: StrokeStyle(lineWidth: 2.2, lineCap: .round)
-                        )
-                        .rotationEffect(.degrees(-90))
-                        .frame(width: 24, height: 24)
-
-                    Text("\(percent)")
-                        .font(.system(size: 9.5, weight: .semibold, design: .rounded))
-                        .foregroundColor(controller.isLowBattery ? .red : .primary)
-                        .monospacedDigit()
-                }
+                Text("\(percent)%")
+                    .font(.callout.monospacedDigit())
+                    .foregroundStyle(controller.isLowBattery ? .red : .primary)
             }
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 8)
-        .background(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(Color(nsColor: .controlBackgroundColor).opacity(0.65))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .strokeBorder(Color(nsColor: .separatorColor).opacity(0.4), lineWidth: 0.5)
-        )
+        .padding(.horizontal, 8)
+        .padding(.vertical, 7)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
     }
 
     // MARK: - Empty State
@@ -304,11 +255,11 @@ public struct MenuView: View {
                 .foregroundColor(.secondary.opacity(0.5))
 
             Text("No Controllers Connected")
-                .font(.system(size: 12.5, weight: .medium))
+                .font(.body)
                 .foregroundColor(.primary.opacity(0.85))
 
             Text("Connect a Bluetooth controller or plug in via USB")
-                .font(.system(size: 11))
+                .font(.callout)
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity)
@@ -368,7 +319,7 @@ struct MenuActionRow<Accessory: View>: View {
                     .frame(width: 20)
 
                 Text(title)
-                    .font(.system(size: 12.5))
+                    .font(.body)
                     .foregroundColor(.primary)
 
                 Spacer()
@@ -406,7 +357,7 @@ struct MenuToggleRow: View {
                 .frame(width: 20)
 
             Text(title)
-                .font(.system(size: 12.5))
+                .font(.body)
                 .foregroundColor(.primary)
 
             Spacer()
@@ -415,6 +366,7 @@ struct MenuToggleRow: View {
                 .labelsHidden()
                 .toggleStyle(.switch)
                 .controlSize(.mini)
+                .accessibilityLabel(title)
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 3.5)
