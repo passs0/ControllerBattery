@@ -120,7 +120,7 @@ LifeBar/
 
 ## ⌨️ Building from Source
 
-Ensure you have **Xcode Command Line Tools** and **Swift 5.9+** installed. Xcode 27 or later is needed to compile the four-appearance icon catalog; without `actool`, a local build uses the static fallback icon.
+Ensure you have **Xcode Command Line Tools** and **Swift 5.9+** installed. Xcode 26.6 or later is needed to compile the four-appearance icon catalog; without `actool`, a local build uses the static fallback icon.
 
 ```bash
 # Clone the repository
