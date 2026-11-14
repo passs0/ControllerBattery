@@ -8,6 +8,8 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelega
     private var popover: NSPopover!
     private var eventMonitor: Any?
     private var cancellables = Set<AnyCancellable>()
+    private var normalImage: NSImage?
+    private var activeImage: NSImage?
 
     public func applicationDidFinishLaunching(_ notification: Notification) {
         setupStatusItem()
@@ -15,15 +17,23 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelega
         setupBindings()
     }
 
+    private func symbolImage(named symbolName: String) -> NSImage? {
+        let symbolConfig = NSImage.SymbolConfiguration(pointSize: 14.5, weight: .regular)
+        let image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Game Controllers")?
+            .withSymbolConfiguration(symbolConfig)
+        image?.isTemplate = true
+        return image
+    }
+
     private func setupStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
+        normalImage = symbolImage(named: "gamecontroller")
+        activeImage = symbolImage(named: "gamecontroller.fill")
+
         if let button = statusItem.button {
-            let symbolConfig = NSImage.SymbolConfiguration(pointSize: 14.5, weight: .regular)
-            let image = NSImage(systemSymbolName: "gamecontroller", accessibilityDescription: "Game Controllers")?
-                .withSymbolConfiguration(symbolConfig)
-            image?.isTemplate = true
-            button.image = image
+            button.image = normalImage
+            button.alternateImage = activeImage
             button.imagePosition = .imageLeft
             button.target = self
             button.action = #selector(togglePopover(_:))
@@ -79,10 +89,16 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelega
         }
     }
 
+    private func updateStatusItemImage(isActive: Bool) {
+        guard let button = statusItem.button else { return }
+        button.image = isActive ? activeImage : normalImage
+    }
+
     private func updateStatusItem() {
         guard let button = statusItem.button else { return }
 
         button.toolTip = ControllerManager.shared.statusItemTooltip
+        updateStatusItemImage(isActive: popover?.isShown ?? false)
 
         if let text = ControllerManager.shared.statusItemText {
             button.title = " \(text)"
@@ -107,6 +123,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelega
             popover.contentSize = host.view.fittingSize
         }
 
+        updateStatusItemImage(isActive: true)
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         button.highlight(true)
         popover.contentViewController?.view.window?.makeKey()
@@ -114,16 +131,19 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelega
 
     private func closePopover() {
         popover.performClose(nil)
+        updateStatusItemImage(isActive: false)
         statusItem.button?.highlight(false)
     }
 
     // MARK: - NSPopoverDelegate (Apple native status item highlight)
 
     public func popoverWillShow(_ notification: Notification) {
+        updateStatusItemImage(isActive: true)
         statusItem.button?.highlight(true)
     }
 
     public func popoverDidClose(_ notification: Notification) {
+        updateStatusItemImage(isActive: false)
         statusItem.button?.highlight(false)
     }
 
